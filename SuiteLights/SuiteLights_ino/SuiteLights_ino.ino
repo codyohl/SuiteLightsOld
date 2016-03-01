@@ -7,7 +7,7 @@
 #define LIGHTS_PER_STRIP 30
 
 #define START_BYTE 32
-#define SEND_RESPONSE 65
+#define SEND_RESPONSE 128
 
 #define PIN_A 5
 #define PIN_B 6
@@ -67,37 +67,37 @@ void loop() {
     if (start == START_BYTE) {
       break;
     } else {
-     Serial.print("invalid start byte: "); Serial.println(start); 
+     //Serial.print("invalid start byte: "); Serial.println(start); 
     }
     //delay(50);
   }
     //delay(100);    
 
-  stripNo = Serial.read() - 'a';
-  pos = Serial.read() - 'a';
+  stripNo = Serial.read();
+  pos = Serial.read();
   r = Serial.read();
   g = Serial.read();
   b = Serial.read();
   
-  Serial.print("Entered: "); 
-  Serial.print(start); Serial.print(" "); 
-  Serial.print(stripNo); Serial.print(" "); 
-  Serial.print(pos); Serial.print(" "); 
-  Serial.print(r); Serial.print(" "); 
-  Serial.print(b); Serial.print(" ");
-  Serial.println(g);
+//  Serial.print("Entered: "); 
+//  Serial.print(start); Serial.print(" "); 
+//  Serial.print(stripNo); Serial.print(" "); 
+//  Serial.print(pos); Serial.print(" "); 
+//  Serial.print(r); Serial.print(" "); 
+//  Serial.print(b); Serial.print(" ");
+//  Serial.println(g);
 
   if (stripNo == SEND_RESPONSE) {
      Serial.print("HELLO FROM ARDUINO");
      return;
   } else if (stripNo < 0 || stripNo >= NUM_STRIPS) {
-    Serial.print("error occurred - strip number invalid: "); Serial.println(stripNo); 
+    //Serial.print("error occurred - strip number invalid: "); Serial.println(stripNo); 
     return;
   } else if (pos < 0 || pos >= LIGHTS_PER_STRIP) {
-    Serial.print("error occurred - no led position for "); Serial.println(pos); 
+    //Serial.print("error occurred - no led position for "); Serial.println(pos); 
   }
   
-  strips[stripNo].setPixelColor((uint32_t) pos, strips[0].Color(r,g,b));
+  strips[stripNo].setPixelColor((uint32_t) pos, strips[0].Color(r,g,b   ));
   strips[stripNo].show();  
   // Some example procedures showing how to display to the pixels:
   //colorWipe(strips[0].Color(255, 0, 0), 50); // Red
