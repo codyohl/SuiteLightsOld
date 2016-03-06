@@ -2,4 +2,5 @@ build/
 obj/
 bin/
 Debug/
-_vm
+_vm/
+__vm/
