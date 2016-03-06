@@ -21,31 +21,36 @@ namespace SuiteController
             {
                 WriteLine("not found");
             }
-
+            controller.SendRainbowGlow();
+            return;
             byte b = 0;
             while (true)
             {
                 
-                for (byte i = 0; i < SuiteController.LIGHTS_PER_STRIP; i++)
+                for (byte j = 0; j < SuiteController.NUM_STRIPS; j++)
                 {
-                    controller.Send(0, i, b, 0, 0);
-                    Thread.Sleep(5);
-                   
-                }
-                for (byte i = 0; i < SuiteController.LIGHTS_PER_STRIP; i++)
-                {
-                    controller.Send(0, i, 0,0,b);
-                    Thread.Sleep(5);
+                    for (byte i = 0; i < SuiteController.LIGHTS_PER_STRIP; i++)
+                    {
+                        controller.SendIndividualLight(j, i, b, 0, 0);
+                        Thread.Sleep(5);
 
-                }
-                for (byte i = 0; i < SuiteController.LIGHTS_PER_STRIP; i++)
-                {
-                    controller.Send(0, i, 0, b,0);
-                    Thread.Sleep(5);
+                    }
+                    for (byte i = 0; i < SuiteController.LIGHTS_PER_STRIP; i++)
+                    {
+                        controller.SendIndividualLight(j, i, 0, 0, b);
+                        Thread.Sleep(5);
 
+                    }
+                    for (byte i = 0; i < SuiteController.LIGHTS_PER_STRIP; i++)
+                    {
+                        controller.SendIndividualLight(j, i, 0, b, 0);
+                        Thread.Sleep(5);
+
+                    }
+
+                    b += 15;
                 }
-                
-                b += 15;
+               
             }
             
         }
