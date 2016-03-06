@@ -7,6 +7,9 @@
 #define NUM_STRIPS 2
 #define LIGHTS_PER_STRIP 30
 
+#define PIN_A 5
+#define PIN_B 6
+
 //modes
 #define START_BYTE 32
 #define SEND_RESPONSE 128
@@ -25,9 +28,6 @@
 #define FREQ_BAND_SPLIT_MUSIC 9
 #define PREQ_BAND_SPLIT_RAINBOW 10
 #define FREQ_BAND_SPLIT_PICK 11
-
-#define PIN_A 5
-#define PIN_B 6
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -60,51 +60,64 @@ void setup() {
 	Serial.println("<Arduino is ready>");
 }
 
-byte start;
-byte stripNo;
-byte pos;
-byte r;
-byte g;
-byte b;
-
 void loop() {
-	// waits for the strip selection, position, and color.
-	byte lastStart;
+	// waits for the start byte and the mode associated with it. 
+	byte start;
 	while (true) {
-		if (Serial.available() < 6) {
+		if (Serial.available() < 2) {
 			continue;
 		}
 		start = Serial.read();
 		if (start == START_BYTE) {
 			break;
 		}
-		else {
-			//Serial.print("invalid start byte: "); Serial.println(start); 
-		}
-		//delay(50);
-	}
-	//delay(100);    
-
-	stripNo = Serial.read();
-	pos = Serial.read();
-	r = Serial.read();
-	g = Serial.read();
-	b = Serial.read();
-
-	if (stripNo == SEND_RESPONSE) {
-		Serial.print("HELLO FROM ARDUINO");
-		return;
-	}
-	else if (stripNo < 0 || stripNo >= NUM_STRIPS) {
-		//Serial.print("error occurred - strip number invalid: "); Serial.println(stripNo); 
-		return;
-	}
-	else if (pos < 0 || pos >= LIGHTS_PER_STRIP) {
-		//Serial.print("error occurred - no led position for "); Serial.println(pos); 
 	}
 
-	strips[stripNo].setPixelColor((uint32_t)pos, strips[0].Color(r, g, b));
-	strips[stripNo].show();
+	byte mode = Serial.read();
+	
+	switch (mode) {
+		case SEND_RESPONSE:
+			Serial.print("HELLO FROM ARDUINO");
+			break;
+		case OFF:
+			off();
+			break;
+		case INDIVIDUAL_LIGHTS:
+			individualLights();
+			break;
+		case RAINBOW_GLOW:
+			allRainbowCycle(20); //TODO allow for speed up / down in changing delay time.
+			break;
+		case THEATER_CHASE:
+			//theaterChase(20);
+			break;
+		case THEATER_CHASE_RAINBOW:
+			theaterChaseRainbow(20);
+			break;
+		case COLOR_WIPE:
+			colorWipe();
+			break;
+		case FREQ_BAND_MUSIC:
+			//TDOD
+			break;
+		case FREQ_BAND_RAINBOW:
+
+			break;
+		case FREQ_BAND_PICK:
+
+			break;
+		case FREQ_BAND_SPLIT_MUSIC:
+
+			break;
+		case PREQ_BAND_SPLIT_RAINBOW:
+
+			break;
+		case FREQ_BAND_SPLIT_PICK:
+
+			break;
+	}
+
+	
 	// Some example procedures showing how to display to the pixels:
 	//colorWipe(strips[0].Color(255, 0, 0), 50); // Red
 	//colorWipe(strips[0].Color(0, 255, 0), 50); // Green
@@ -117,35 +130,52 @@ void loop() {
 
 	//rainbow(20);
 	//rainbowCycle(20);
-	//
-
-
-
 
 	//allRainbowCycle(20);
-
-
-
-
 	//theaterChaseRainbow(50);
 }
 
-// Fill the dots one after the other with a color
-void colorWipe(uint32_t c, uint8_t wait) {
-	for (uint32_t s = 0; s < NUM_STRIPS; s++) {
-		for (uint16_t i = 0; i<strips[s].numPixels(); i++) {
-			strips[s].setPixelColor(i, c);
-			strips[s].show();
-			delay(wait);
-		}
-
-		if (s == 2) {
-			strips[0].setPixelColor(s, 100);
-			strips[0].show();
+void individualLights() {
+	while (true) {
+		if (Serial.available() >= 5) {
+			break;
 		}
 	}
-	strips[0].setPixelColor(1, 100);
-	strips[0].show();
+	byte stripNo = Serial.read();
+	byte pos = Serial.read();
+	byte r = Serial.read();
+	byte g = Serial.read();
+	byte b = Serial.read();
+
+	strips[stripNo].setPixelColor((uint16_t)pos, strips[0].Color(r, g, b));
+	strips[stripNo].show();
+}
+
+void off() {
+	for (int i = 0; i < NUM_STRIPS; i++) {
+		strips[i].begin();
+		strips[i].show(); // Initialize all pixels to 'off'
+	}
+}
+
+// Fill the dots one after the other with a color
+void colorWipe() {
+	while (true) {
+		if (Serial.available() >= 5) {
+			break;
+		}
+	}
+	byte stripNo = Serial.read();
+	byte wait = Serial.read();
+	byte r = Serial.read();
+	byte g = Serial.read();
+	byte b = Serial.read();
+	
+	for (uint16_t i = 0; i < strips[stripNo].numPixels(); i++) {
+		strips[stripNo].setPixelColor(i, strips[0].Color(r,g,b));
+		strips[stripNo].show();
+		delay(wait);
+	}
 }
 
 void rainbow(uint8_t wait) {
@@ -167,7 +197,8 @@ void rainbowCycle(uint8_t wait) {
 	for (int s = 0; s < NUM_STRIPS; s++) {
 		uint16_t i, j;
 
-		for (j = 0; j<256 * 5; j++) { // 5 cycles of all colors on wheel
+
+		for (j = 0; Serial.available() <= 0; j++) { // 5 cycles of all colors on wheel
 			for (i = 0; i< strips[s].numPixels(); i++) {
 				strips[s].setPixelColor(i, Wheel(((i * 256 / strips[s].numPixels()) + j) & 255));
 			}
@@ -245,17 +276,4 @@ uint32_t Wheel(byte WheelPos) {
 	}
 	WheelPos -= 170;
 	return strips[0].Color(WheelPos * 3, 255 - WheelPos * 3, 0);
-}
-
-char receivedChar;
-boolean newData = false;
-
-void getInput() {
-	// waits to recieve a char
-	while (!Serial.available()) {}
-
-	if (Serial.available() > 0) {
-		receivedChar = Serial.read();
-		newData = true;
-	}
 }

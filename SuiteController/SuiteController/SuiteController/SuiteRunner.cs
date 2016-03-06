@@ -20,9 +20,15 @@ namespace SuiteController
             else
             {
                 WriteLine("not found");
+                return;
             }
+
+
+            // test
             controller.SendRainbowGlow();
             return;
+
+
             byte b = 0;
             while (true)
             {
