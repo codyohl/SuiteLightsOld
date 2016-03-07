@@ -19,7 +19,7 @@
 // modes
 #define OFF 0
 #define INDIVIDUAL_LIGHTS 1
-#define RAINBOW_GLOW 2
+#define RAINBOW_GLOW 65
 #define THEATER_CHASE 3
 #define THEATER_CHASE_RAINBOW 4
 #define COLOR_WIPE 5
@@ -81,7 +81,6 @@ void loop() {
 			break;
 		}
 	}
-
 	byte mode = Serial.read();
 	
 	switch (mode) {

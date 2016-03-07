@@ -16,7 +16,7 @@ namespace SuiteController
             SEND_RESPONSE = 128,
             OFF = 0,
             INDIVIDUAL_LIGHTS = 1,
-            RAINBOW_GLOW = 2,
+            RAINBOW_GLOW = 65,
             THEATER_CHASE = 3,
             THEATER_CHASE_RAINBOW = 4,
             COLOR_WIPE = 5,
@@ -122,19 +122,34 @@ namespace SuiteController
             CurrentPort.Open();
             CurrentPort.Write(buffer, 0, buffer.Length);
             CurrentPort.Close();
-            Thread.Sleep(5);
+            Thread.Sleep(7);
         }
 
         public void SendRainbowGlow()
         {
             byte[] buffer =
             {
-                Convert.ToByte(START_BYTE),
+                START_BYTE,
                 Convert.ToByte(Modes.RAINBOW_GLOW)
             };
             CurrentPort.Open();
             CurrentPort.Write(buffer, 0, buffer.Length);
+
+
+            //Thread.Sleep(10000);
+            //int count = CurrentPort.BytesToRead;
+            //string returnMessage = "";
+            //while (count > 0)
+            //{
+            //    int intReturnASCII = CurrentPort.ReadByte();
+            //    returnMessage = returnMessage + Convert.ToChar(intReturnASCII);
+            //    count--;
+            //}
+            //Console.WriteLine(returnMessage);
+
+
             CurrentPort.Close();
+
             Thread.Sleep(5);
         }
 

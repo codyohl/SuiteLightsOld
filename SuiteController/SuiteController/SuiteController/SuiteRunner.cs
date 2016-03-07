@@ -26,8 +26,11 @@ namespace SuiteController
 
             // test
             controller.SendRainbowGlow();
-            return;
-
+            Thread.Sleep(3000);
+            controller.SendOff();
+            Thread.Sleep(3000);
+            controller.SendRainbowGlow();
+            Thread.Sleep(3000);
 
             byte b = 0;
             while (true)
