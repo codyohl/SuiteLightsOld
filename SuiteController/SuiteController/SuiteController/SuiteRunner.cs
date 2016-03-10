@@ -12,6 +12,13 @@ namespace SuiteController
     {
         public static void Main(String[] args)
         {
+
+
+           
+
+            var r = new FFTRunner();
+            r.BeginRecording();
+            
             var controller = new SuiteController();
             if (controller.findComPort())
             {
@@ -22,7 +29,6 @@ namespace SuiteController
                 WriteLine("not found");
                 return;
             }
-
 
             // test
             controller.SendRainbowGlow();

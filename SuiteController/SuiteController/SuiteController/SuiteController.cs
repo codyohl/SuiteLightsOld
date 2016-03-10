@@ -20,7 +20,7 @@ namespace SuiteController
             THEATER_CHASE = 3,
             THEATER_CHASE_RAINBOW = 4,
             COLOR_WIPE = 5,
-
+            
             FREQ_BAND_MUSIC = 6,
             FREQ_BAND_RAINBOW = 7,
             FREQ_BAND_PICK = 8,
@@ -92,8 +92,6 @@ namespace SuiteController
                 CurrentPort.Close();
                 if (returnMessage.Contains(RESPONSE_MESSAGE))
                 {
-                    // sets the default mode
-                    CurrentMode = Convert.ToByte(Modes.INDIVIDUAL_LIGHTS);
                     return true;
                 }
                 else
@@ -134,22 +132,7 @@ namespace SuiteController
             };
             CurrentPort.Open();
             CurrentPort.Write(buffer, 0, buffer.Length);
-
-
-            //Thread.Sleep(10000);
-            //int count = CurrentPort.BytesToRead;
-            //string returnMessage = "";
-            //while (count > 0)
-            //{
-            //    int intReturnASCII = CurrentPort.ReadByte();
-            //    returnMessage = returnMessage + Convert.ToChar(intReturnASCII);
-            //    count--;
-            //}
-            //Console.WriteLine(returnMessage);
-
-
             CurrentPort.Close();
-
             Thread.Sleep(5);
         }
 
@@ -213,9 +196,8 @@ namespace SuiteController
             CurrentPort.Close();
             Thread.Sleep(5);
         }
-
-        // increases by 5 milliseconds for delay between animations.
-        public void IncreaseSpeed()
+        
+        public void SendIncreaseSpeed()
         {
             byte[] buffer =
             {
@@ -227,9 +209,8 @@ namespace SuiteController
             CurrentPort.Close();
             Thread.Sleep(5);
         }
-
-        // decreases by 5 milliseconds for delay between animations.
-        public void DecreaseSpeed()
+        
+        public void SendDecreaseSpeed()
         {
             byte[] buffer =
             {
