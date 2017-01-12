@@ -16,8 +16,8 @@ namespace SuiteController
 
            
 
-            var r = new FFTRunner();
-            r.BeginRecording();
+            //var r = new FFTRunner();
+            //r.BeginRecording();
             
             var controller = new SuiteController();
             if (controller.findComPort())
@@ -30,13 +30,43 @@ namespace SuiteController
                 return;
             }
 
-            // test
-            controller.SendRainbowGlow();
+            //// test
+            //controller.SendRainbowGlow();
+            //Thread.Sleep(3000);
+            //controller.SendOff();
+            //Thread.Sleep(3000);
+            //controller.SendRainbowGlow();
+            //Thread.Sleep(3000);
+
+            //controller.SendColorWipe(0, 255, 0, 0);
+            //Thread.Sleep(3000);
+
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    controller.SendIncreaseSpeed();
+            //    Thread.Sleep(100);
+            //}
+
+            //Thread.Sleep(1000);
+
+            //controller.SendTheatreChaseRainbow(0);
+            //controller.SendTheatreChaseRainbow(1);
+
+            //Thread.Sleep(2000);
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    controller.SendDecreaseSpeed();
+            //    Thread.Sleep(100);
+            //}
+
+            controller.SendTheatreChaseRainbow(0);
+
+            Thread.Sleep(100000);
+
+            controller.SendTheatreChase(0, 0, 255, 0);
             Thread.Sleep(3000);
-            controller.SendOff();
-            Thread.Sleep(3000);
-            controller.SendRainbowGlow();
-            Thread.Sleep(3000);
+
 
             byte b = 0;
             while (true)

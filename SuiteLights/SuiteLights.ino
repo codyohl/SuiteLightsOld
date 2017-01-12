@@ -33,6 +33,9 @@
 #define FREQ_BAND_SPLIT_PICK 11
 
 
+#define NUM_MUSICBANDS 6
+
+
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
 // Parameter 3 = pixel type flags, add together as needed:
@@ -106,7 +109,7 @@ void loop() {
 			colorWipe();
 			break;
 		case FREQ_BAND_MUSIC:
-			//TDOD
+			freqBandMusic();
 			break;
 		case FREQ_BAND_RAINBOW:
 
@@ -147,6 +150,49 @@ void loop() {
 
 	//allRainbowCycle(20);
 	//theaterChaseRainbow(50);
+}
+
+byte history[5][NUM_STRIPS][LIGHTS_PER_STRIP];
+
+/** precondition: NUM_STRIPS <= NUM_MUSICBANDS */
+void freqBandMusic() {
+	while (true) {
+		if (Serial.available() >= NUM_MUSICBANDS) {
+			break;
+		}
+	}
+
+	byte data[NUM_MUSICBANDS];
+	bool beenVisited[NUM_MUSICBANDS];
+
+	for (byte i = 0; i < NUM_MUSICBANDS; i++) {
+		beenVisited[i] = false;
+		data[i] = Serial.read();
+	}
+
+	// consolidates the music mode into number of strips, averaging bands.
+	uint32_t addedData[NUM_STRIPS];
+	for (int i = 0; i < NUM_STRIPS; i++) {
+		addedData[i] = 0;
+	}
+
+	for (int i = 0; i < NUM_STRIPS; i++) {
+		addedData[i / NUM_STRIPS] += data[i];
+
+		// need to average if multiple fit in same slot.
+		if (beenVisited[i / NUM_STRIPS]) {
+			data[i] = data[i] / 2;
+		}
+		// increments the been visited.
+		beenVisited[i / NUM_STRIPS] = true;
+	}
+
+	// Now, addedData contains all data for strips. just need the transformations.
+	//--transform the addedData to change the lights
+	
+	//--wait?
+	//--return and listen for more data in next loop?
+
 }
 
 void individualLights() {

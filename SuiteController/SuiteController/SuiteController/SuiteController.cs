@@ -183,7 +183,7 @@ namespace SuiteController
             Thread.Sleep(5);
         }
 
-        public void SendTheatreChaseRainbow(byte stripNo, byte r, byte g, byte b)
+        public void SendTheatreChaseRainbow(byte stripNo)
         {
             byte[] buffer =
             {

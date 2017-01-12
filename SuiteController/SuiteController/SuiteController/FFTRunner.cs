@@ -47,7 +47,7 @@ namespace SuiteController
                         SpectrumProvider = provider,
                         UseAverage = true,
                         height = 100,
-                        BarCount = 10,
+                        BarCount = 50,
                         BarSpacing = 2,
                         IsXLogScale = true,
                         ScalingStrategy = ScalingStrategy.Sqrt
